@@ -1,0 +1,67 @@
+# 🎵 Identificação de Instrumentos Musicais com Redes Neurais
+
+Este repositório contém um projeto de Deep Learning (Deep Learning) focado na classificação de instrumentos musicais. O objetivo é treinar uma Rede Neural Convolucional (CNN) para identificar a família de um instrumento (ex: guitarra, baixo, violino) com base em seu espectrograma de áudio.
+
+## 🚀 Sobre o Projeto
+
+A classificação de áudio é um desafio complexo. Este projeto aborda o problema tratando o áudio de forma visual. Os arquivos de áudio são convertidos em espectrogramas (representações visuais da frequência ao longo do tempo), que são então usados como "imagens" para treinar uma CNN, de forma similar a um problema de classificação de imagens.
+
+Este código é a primeira etapa essencial do pipeline: **o pré-processamento e preparação dos dados**.
+
+## 💻 Tecnologias Utilizadas
+
+* **Python 3.x**
+* **TensorFlow / Keras:** Para a construção e treinamento do modelo de Rede Neural Convolucional.
+* **Numpy:** Para manipulação de arrays e operações numéricas.
+* **Pandas:** (Inferido) Para carregar e organizar os dados inicialmente (ex: `mini_df`).
+* **Scikit-learn:** Para o pré-processamento essencial dos rótulos e divisão dos dados.
+    * `LabelEncoder`: Para transformar rótulos de texto (ex: "guitar") em números (ex: 0).
+    * `OneHotEncoder`: Para transformar rótulos numéricos em vetores binários para classificação multiclasse.
+    * `train_test_split`: Para dividir os dados em conjuntos de treino e validação.
+* **Librosa / Matplotlib:** (Provavelmente) Usados em uma etapa anterior (não neste script) para extrair os espectrogramas dos arquivos de áudio `.wav` ou `.mp3`.
+
+## 🛠️ O Pipeline de Pré-Processamento
+
+O script principal (ex: `01_prepare_data.py`) foca em transformar os dados brutos em um formato que a rede neural possa entender.
+
+1.  **Carregar Features (X):**
+    * Os dados (espectrogramas) são carregados de um DataFrame.
+    * É adicionada uma "dimensão de canal" (`X[..., np.newaxis]`). Isso é crucial para a CNN, tratando o espectrograma como uma imagem em escala de cinza (formato: `(amostras, altura, largura, 1)`).
+
+2.  **Carregar Rótulos (y):**
+    * Os nomes dos instrumentos (strings) são extraídos.
+    * **Label Encoding:** As strings são convertidas em números inteiros (ex: `guitar` -> `0`, `bass` -> `1`).
+    * **One-Hot Encoding:** Os números inteiros são convertidos em vetores. Isso evita que o modelo assuma uma relação ordinal (ex: `bass` (1) não é "maior" que `guitar` (0)).
+        * `0` -> `[1, 0, 0, 0]`
+        * `1` -> `[0, 1, 0, 0]`
+
+3.  **Dividir os Dados:**
+    * O conjunto de dados é dividido em conjuntos de **treinamento (80%)** e **validação (20%)**.
+    * O parâmetro `stratify=y` é usado para garantir que a proporção de cada instrumento seja a mesma tanto no conjunto de treino quanto no de validação, o que é vital para um treinamento balanceado.
+
+## 📈 Próximos Passos
+
+Este script prepara os dados `X_train`, `y_train`, `X_val`, `y_val`. O próximo passo lógico no projeto é:
+
+1.  **Definir a Arquitetura da CNN:** Criar um modelo em Keras/TensorFlow (ex: usando `Sequential()` com camadas `Conv2D`, `MaxPooling2D`, `Flatten`, `Dense`).
+2.  **Compilar o Modelo:** Definir a função de perda (ex: `categorical_crossentropy`), o otimizador (ex: `Adam`) e as métricas (ex: `accuracy`).
+3.  **Treinar o Modelo:** Chamar `model.fit()` usando os dados preparados por este script.
+4.  **Avaliar:** Usar o `X_val` e `y_val` para avaliar o desempenho do modelo em dados nunca vistos.
+
+## Como Usar
+
+1.  Clone o repositório:
+    ```bash
+    git clone [https://github.com/VitorArlinson/Instrument_DetectorAI]
+    cd seu-repositorio
+    ```
+
+2.  Instale as dependências:
+    ```bash
+    pip install requirements.txt
+    ```
+
+3.  Execute o script de pré-processamento (assumindo que você tenha os dados):
+    ```bash
+    python main.py
+    ```
