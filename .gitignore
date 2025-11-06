@@ -1,4 +1,5 @@
 
 venv-tf/
 data/
-
+models/
+gpu_test.py

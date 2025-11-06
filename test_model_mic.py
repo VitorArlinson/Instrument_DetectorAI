@@ -92,4 +92,4 @@ try:
         time.sleep(PREDICTION_INTERVAL)
 
 except KeyboardInterrupt:
-    print("\nPrograma interrompido pelo usuário.")
+    print("\nPrograma interrompido.")
